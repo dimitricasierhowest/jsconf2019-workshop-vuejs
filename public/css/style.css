@@ -1,0 +1,5 @@
+body{
+    background: #eee;
+    background-image: url('../img/background.jpg');
+    background-attachment:fixed;
+}
