@@ -1,15 +1,19 @@
 <template>
   <div class="heroes">
-    my heroes list
+    <heroes></heroes>
   </div>
 </template>
 <script>
 
 
-
+import Heroes from '@/modules/heroes/components/MyHeroes.vue'
 
 export default {
   name: 'my-heroes-page',
-  
+  components: { Heroes },
+  data(){
+    return {     
+    }
+  }
 }
 </script>

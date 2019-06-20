@@ -1,14 +1,14 @@
 <template>
     <article class="hero">
         <header>
-            <h2>name</h2>        
-            <h3><span>race</span> <span>gender</span></h3>
+            <h2>{{ hero.name }}</h2>        
+            <h3><span>{{ hero.appearance.race }}</span> <span>{{ hero.appearance.gender }}</span></h3>
         </header>
-        <div class="picture" style="backgroundImage=url(...)">
-            <div>stars</div>
+        <div class="picture" :style="{ backgroundImage: 'url('  + hero.picture + ')'}">
+            <div>{{ hero.stars }}</div>
         </div>
-        STATS COMPONENT     
-        <div class="nolikeIcon"></div>  
+        <stats :stats="hero.stats"></stats>      
+        <div :class="{ nolikeIcon: !hero.liked, likeIcon: hero.liked}" @click="toggleLike(hero.id)"></div>  
     </article>
 </template>
 <script>
@@ -21,9 +21,20 @@
     - methods
 */
 
+import Stats from '@/modules/heroes/components/Stats.vue'
+
 export default {
     name: 'hero',
-    
+    components: { Stats },
+    props: {
+        hero: Object,
+    },
+    methods: {
+        toggleLike(){
+            this.hero.liked = !this.hero.liked
+            this.$emit('liked', this.hero)
+        }
+    }
 }
 </script>
 <style>

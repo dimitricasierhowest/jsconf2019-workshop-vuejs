@@ -4,28 +4,27 @@
         <div>
             <div class="search row">
                 <div class="group">
-                    <label>name</label> <input/>
+                    <label>name</label> <input v-model="filter.name"/>
                 </div>
                 <div class="group">
-                    <label>race</label> <input/>
+                    <label>race</label> <input v-model="filter.race"/>
                 </div>
             </div>
             <div class="selection row">
                 <div class="group">
                     <label>gender</label>
                     <ul>
-                        <li><label for="male">Male</label> <input id="male" type="checkbox" value="Male"/></li>
-                        <li><label for="female">Female</label><input id="female" type="checkbox" value="Female"/></li>
-                        <li><label for="none">None</label><input id="none" type="checkbox" value="-"/></li> 
+                        <li><label for="male">Male</label> <input id="male" type="checkbox" v-model="filter.gender" value="Male"/></li>
+                        <li><label for="female">Female</label><input id="female" type="checkbox" v-model="filter.gender" value="Female"/></li>
+                        <li><label for="none">None</label><input id="none" type="checkbox" v-model="filter.gender" value="-"/></li> 
                     </ul>
                 </div>
                 <div class="group">
                     <label>stars</label>
                     <ul >
-                        <!-- loop stars from 1 to 6 -->
-                        <li>
-                            <label for="star_x" >star</label> 
-                            <input id="star_x" type="checkbox" value="star" />
+                        <li v-for="star in 6" :key="star">
+                            <label :for="'star_' + star" >{{star}}</label> 
+                            <input :id="'star_' + star" type="checkbox" v-model="filter.stars" :value="star" />
                         </li>
                     </ul>
                 </div>
@@ -33,13 +32,13 @@
             <div class="sort row">
                 <div class="group">
                     <label>sort</label>
-                    <select>
+                    <select v-model="sort.field">
                         <option value=""></option>
                         <option value="name">name</option>
                         <option value="race">race</option>
                         <option value="stars">stars</option>
                     </select>
-                    <select>
+                    <select v-model="sort.order" v-show="sort.field">
                         <option value="asc">asc</option>
                         <option value="desc">desc</option>
                     </select>
@@ -57,10 +56,38 @@
   - watchers
 */
 
+import {EventBus} from '@/modules/core/EventBus.js'
 
 export default {
     name: "hero-filter",    
-    
+    data(){
+        return {
+            filter: {
+                name: "",
+                gender: ['Female', 'Male', '-'],
+                race: "",
+                stars: [1,2,3,4,5,6],
+            },
+            sort: {
+                field: "name",
+                order: "asc"
+            }
+        }
+    },
+    watch: {
+        'filter': {
+            handler(newValue) {
+                 EventBus.$emit('filterChanged', newValue)
+            },
+            deep: true
+        },
+        'sort': {
+            handler(newValue) {
+                 EventBus.$emit('sortChanged', newValue)
+            },
+            deep: true
+        }
+    },
 }
 </script>
 

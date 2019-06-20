@@ -14,18 +14,26 @@
     - eventbus
     - hooks (created & beforeDestroy)
     - methods
-    - mixins
     - service
-
 */
+
+import HeroService from '@/modules/heroes/services/HeroService.js'
 import Hero from '@/modules/heroes/components/Hero.vue'
-import HeroesMixin from '@/modules/heroes/core/HeroesMixin.js'
 import {EventBus} from '@/modules/core/EventBus.js'
 
 export default {
     name: "heroes",
-    mixins: [HeroesMixin],
     components: { Hero },
+     data(){
+        return {
+            counter: 0,
+            filter: null,
+            sort: null,
+            heroes: [],   
+            service: new HeroService 
+         
+        }
+    },
     created(){
         this.load()
         EventBus.$on('filterChanged', this.setFilter)
@@ -35,16 +43,7 @@ export default {
         EventBus.$off('filterChanged', this.setFilter)
         EventBus.$off('sortChanged', this.setSort)
     },
-    methods:{
-        load(){            
-
-            // -- load heroes
-            let service = this.getService()
-            service.heroes().then(data => {
-                this.heroes = data
-                this.counter = this.heroes.length
-            })      
-        },           
+    methods:{                
         getHeroes(){
             let service = this.getService()
 
@@ -53,7 +52,28 @@ export default {
 
             this.counter = heroes.length
             return heroes
-        },        
+        },
+        getService(){
+            return new HeroService
+        },
+        load(){            
+
+            // -- load heroes
+            let service = this.getService()
+            service.heroes().then(data => {
+                this.heroes = data
+                this.counter = this.heroes.length
+            })      
+        },   
+        onLike(hero){
+            let service = this.getService() 
+            if(hero.liked) {      
+                service.like(hero.id)                
+                return
+            }//endif
+
+            service.unLike(hero.id)
+        },              
         setFilter(filter){
             this.filter = filter
         },

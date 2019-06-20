@@ -1,8 +1,8 @@
 <template>
     <div class="stats">      
         <ul>
-            <li >
-                <label>stat</label> <div class="bar" style="width: 50px">50</div>
+            <li v-for="key in keys" :key="key">
+                <label>{{key}}: </label> <div class="bar" :style="{width: (stats[key] *2) + 'px' }">{{ stats[key]}}</div>
             </li>
         </ul>        
     </div>
@@ -18,7 +18,14 @@
 
 export default{
     name: "stats",
-    
+    props: {
+        stats: Object
+    },
+    computed: {
+        keys(){
+            return Object.keys(this.stats)
+        }
+    }
 }
 </script>
 <style>
